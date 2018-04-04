@@ -5,7 +5,6 @@ use rand::Rng;
 use arith::U256;
 
 use serde::ser::Serialize;
-use serde::de::DeserializeOwned;
 
 fn frobenius_coeffs_c1(power: usize) -> Fq2 {
     match power % 12 {

@@ -6,9 +6,6 @@ use arith::{U256, U512};
 
 use rustc_serialize::{Encodable, Encoder, Decodable, Decoder};
 
-use serde::ser::Serialize;
-use serde::de::{Deserialize, DeserializeOwned};
-
 #[inline]
 fn fq_non_residue() -> Fq {
     // (q - 1) is a quadratic nonresidue in Fq

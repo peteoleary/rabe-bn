@@ -17,6 +17,9 @@ use groups::GroupElement;
 use std::ops::{Add, Sub, Mul, Neg};
 use rand::Rng;
 
+use serde::ser::Serialize;
+use serde::de::DeserializeOwned;
+
 #[derive(Copy, Clone, PartialEq, Eq, RustcDecodable, RustcEncodable, Serialize, Deserialize)]
 #[repr(C)]
 pub struct Fr(fields::Fr);
@@ -243,7 +246,7 @@ pub trait SerializableGt
     + Copy
     + Clone
     + Serialize
-    + Deserialize
+    + DeserializeOwned
     + PartialEq
     + Eq {
 }
