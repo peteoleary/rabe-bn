@@ -2,8 +2,6 @@ use rand::Rng;
 use std::ops::{Add, Sub, Mul, Neg};
 use super::FieldElement;
 
-use rustc_serialize::{Encodable, Encoder, Decodable, Decoder};
-
 use arith::{U512, U256};
 
 macro_rules! field_impl {
@@ -21,6 +19,7 @@ macro_rules! field_impl {
             }
         }
 
+		/*
         impl Encodable for $name {
             fn encode<S: Encoder>(&self, s: &mut S) -> Result<(), S::Error> {
                 let normalized = U256::from(*self);
@@ -34,7 +33,9 @@ macro_rules! field_impl {
                 $name::new(try!(U256::decode(s))).ok_or_else(|| s.error("integer is not less than modulus"))
             }
         }
-
+        
+        */
+		
         impl $name {
             pub fn from_str(s: &str) -> Option<Self> {
                 let ints: Vec<_> = {

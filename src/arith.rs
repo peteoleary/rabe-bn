@@ -1,7 +1,6 @@
 use std::cmp::Ordering;
 use rand::Rng;
 
-use rustc_serialize::{Encodable, Encoder, Decodable, Decoder};
 use byteorder::{ByteOrder, BigEndian};
 
 /// 256-bit, stack allocated biginteger for use in prime field
@@ -95,6 +94,7 @@ impl U512 {
     }
 }
 
+/*
 impl Encodable for U512 {
     fn encode<S: Encoder>(&self, s: &mut S) -> Result<(), S::Error> {
         let mut buf = [0; (8 * 8)];
@@ -155,6 +155,7 @@ impl Decodable for U256 {
         Ok(U256(n))
     }
 }
+*/
 
 impl Ord for U256 {
     #[inline]

@@ -4,8 +4,6 @@ use arith::U256;
 use std::fmt;
 use rand::Rng;
 
-use rustc_serialize::{Encodable, Encoder, Decodable, Decoder};
-
 use serde::ser::Serialize;
 use serde::de::DeserializeOwned;
 
@@ -28,7 +26,7 @@ pub trait GroupElement
 }
 
 pub trait GroupParams: Sized {
-    type Base: FieldElement + Decodable + Encodable + Serialize + DeserializeOwned;
+    type Base: FieldElement + Serialize + DeserializeOwned;
 
     fn name() -> &'static str;
     fn one() -> G<Self>;
@@ -146,7 +144,7 @@ impl<P: GroupParams> AffineG<P> {
         }
     }
 }
-
+/*
 impl<P: GroupParams> Encodable for G<P> {
     fn encode<S: Encoder>(&self, s: &mut S) -> Result<(), S::Error> {
         if self.is_zero() {
@@ -209,6 +207,7 @@ impl<P: GroupParams> Decodable for AffineG<P> {
         }
     }
 }
+*/
 
 impl<P: GroupParams> GroupElement for G<P> {
     fn zero() -> Self {

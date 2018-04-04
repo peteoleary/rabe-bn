@@ -121,7 +121,7 @@ fn frobenius_coeffs_c2(n: usize) -> Fq2 {
     }
 }
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq, RustcEncodable, RustcDecodable, Serialize, Deserialize)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(C)]
 pub struct Fq6 {
     pub c0: Fq2,
