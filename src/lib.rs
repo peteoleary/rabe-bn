@@ -17,6 +17,9 @@ use groups::GroupElement;
 use std::ops::{Add, Sub, Mul, Neg};
 use rand::Rng;
 
+use serde::ser::Serialize;
+use serde::de::Deserialize;
+
 #[derive(Copy, Clone, PartialEq, Eq, RustcDecodable, RustcEncodable, Serialize, Deserialize)]
 #[repr(C)]
 pub struct Fr(fields::Fr);
@@ -102,7 +105,7 @@ pub trait Group
     fn normalize(&mut self);
 }
 
-#[derive(Copy, Clone, PartialEq, Eq, RustcDecodable, RustcEncodable)]
+#[derive(Copy, Clone, PartialEq, Eq, RustcDecodable, RustcEncodable, Serialize, Deserialize)]
 #[repr(C)]
 pub struct G1(groups::G1);
 
