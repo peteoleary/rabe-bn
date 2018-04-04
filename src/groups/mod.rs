@@ -7,7 +7,7 @@ use rand::Rng;
 use rustc_serialize::{Encodable, Encoder, Decodable, Decoder};
 
 use serde::ser::Serialize;
-use serde::de::{Deserialize, DeserializeOwned};
+use serde::de::DeserializeOwned;
 
 pub trait GroupElement
     : Sized
