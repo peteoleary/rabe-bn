@@ -5,14 +5,15 @@ extern crate bn;
 extern crate rand;
 
 use bn::*;
+use rand::Rng;
 
 fn main() {
-    let rng = &mut rand::thread_rng();
+    let mut rng = rand::thread_rng();
 
     // Construct private keys
-    let alice_sk = Fr::random(rng);
-    let bob_sk = Fr::random(rng);
-    let carol_sk = Fr::random(rng);
+    let alice_sk:Fr = rng.gen();
+    let bob_sk:Fr = rng.gen();
+    let carol_sk:Fr = rng.gen();
 
     // Construct public keys
     let alice_pk = G1::one() * alice_sk;

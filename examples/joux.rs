@@ -1,14 +1,15 @@
 extern crate bn;
 extern crate rand;
 use bn::{Group, Fr, G1, G2, pairing};
+use rand::Rng;
 
 fn main() {
-    let rng = &mut rand::thread_rng();
+    let mut rng = rand::thread_rng();
 
     // Generate private keys
-    let alice_sk = Fr::random(rng);
-    let bob_sk = Fr::random(rng);
-    let carol_sk = Fr::random(rng);
+    let alice_sk:Fr = rng.gen();
+    let bob_sk:Fr = rng.gen();
+    let carol_sk:Fr = rng.gen();
 
     // Generate public keys in G1 and G2
     let (alice_pk1, alice_pk2) = (G1::one() * alice_sk, G2::one() * alice_sk);

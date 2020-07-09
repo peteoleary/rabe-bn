@@ -6,6 +6,7 @@ use rand::Rng;
 
 use serde::ser::Serialize;
 use serde::de::DeserializeOwned;
+use std::time::SystemTime;
 
 pub trait GroupElement
     : Sized
@@ -973,9 +974,12 @@ fn test_reduced_pairing() {
 
 #[test]
 fn test_binlinearity() {
-    use rand::{SeedableRng, StdRng};
-    let seed: [usize; 4] = [103245, 191922, 1293, 192103];
-    let mut rng = StdRng::from_seed(&seed);
+    use rand::SeedableRng;
+    use rand::rngs::StdRng;
+    let d = SystemTime::now()
+        .duration_since(SystemTime::UNIX_EPOCH)
+        .expect("Duration since UNIX_EPOCH failed");
+    let mut rng = StdRng::seed_from_u64(d.as_secs());
 
     for _ in 0..50 {
         let p = G1::random(&mut rng);

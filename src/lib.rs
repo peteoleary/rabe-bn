@@ -5,20 +5,21 @@ extern crate serde;
 extern crate serde_json;
 extern crate rand;
 extern crate byteorder;
-extern crate arrayvec;
+#[macro_use]
+extern crate arrayref;
+extern crate serde_hex;
 
 mod arith;
 mod fields;
 mod groups;
 
+use std::fmt;
 use fields::FieldElement;
 use groups::GroupElement;
-
 use std::ops::{Add, Sub, Mul, Neg};
-
 use rand::{
     Rng,
-    distributions::{Distribution, Alphanumeric, Standard}
+    distributions::{Distribution, Standard}
 };
 
 use serde::ser::Serialize;
@@ -87,25 +88,15 @@ impl Mul for Fr {
 
 impl Distribution<crate::fields::Fr> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> crate::fields::Fr {
-        let rand_string: String = rng
-            .sample_iter(&Alphanumeric)
-            .take(30)
-            .collect();
-        println!("crate::fields::Fr: {:?}", &rand_string);
-        match crate::fields::Fr::from_str(&rand_string) {
-            Some(fr) => fr,
-            None => self.sample(rng)
-        }
+        let random_bytes: Vec<u8> = (0..64).map(|_| { rng.gen::<u8>() }).collect();
+        crate::fields::Fr::interpret(array_ref!(random_bytes[..], 0, 64))
     }
 }
 
 impl Distribution<Fr> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Fr {
-        let mut array_vec: arrayvec::ArrayVec<[u8; 64]> = arrayvec::ArrayVec::new();
-        for _ in 0..array_vec.capacity() {
-            array_vec.push(rng.gen());
-        }
-        Fr::interpret(&array_vec.into_inner().unwrap())
+        let random_bytes: Vec<u8> = (0..64).map(|_| { rng.gen::<u8>() }).collect();
+        Fr::interpret(array_ref!(random_bytes[..], 0, 64))
     }
 }
 
