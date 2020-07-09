@@ -5,6 +5,7 @@ extern crate serde;
 extern crate serde_json;
 extern crate rand;
 extern crate byteorder;
+extern crate arrayvec;
 
 mod arith;
 mod fields;
@@ -14,7 +15,11 @@ use fields::FieldElement;
 use groups::GroupElement;
 
 use std::ops::{Add, Sub, Mul, Neg};
-use rand::Rng;
+
+use rand::{
+    Rng,
+    distributions::{Distribution, Alphanumeric, Standard}
+};
 
 use serde::ser::Serialize;
 use serde::de::DeserializeOwned;
@@ -30,9 +35,7 @@ impl Fr {
     pub fn one() -> Self {
         Fr(fields::Fr::one())
     }
-    pub fn random<R: Rng>(rng: &mut R) -> Self {
-        Fr(fields::Fr::random(rng))
-    }
+    //pub fn random<R: Rng>(rng: &mut R) -> Self {        Fr(fields::Fr::random(rng))    }
     pub fn pow(&self, exp: Fr) -> Self {
         Fr(self.0.pow(exp.0))
     }
@@ -79,6 +82,30 @@ impl Mul for Fr {
 
     fn mul(self, other: Fr) -> Fr {
         Fr(self.0 * other.0)
+    }
+}
+
+impl Distribution<crate::fields::Fr> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> crate::fields::Fr {
+        let rand_string: String = rng
+            .sample_iter(&Alphanumeric)
+            .take(30)
+            .collect();
+        println!("crate::fields::Fr: {:?}", &rand_string);
+        match crate::fields::Fr::from_str(&rand_string) {
+            Some(fr) => fr,
+            None => self.sample(rng)
+        }
+    }
+}
+
+impl Distribution<Fr> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Fr {
+        let mut array_vec: arrayvec::ArrayVec<[u8; 64]> = arrayvec::ArrayVec::new();
+        for _ in 0..array_vec.capacity() {
+            array_vec.push(rng.gen());
+        }
+        Fr::interpret(&array_vec.into_inner().unwrap())
     }
 }
 
@@ -163,6 +190,13 @@ impl Mul<Fr> for G1 {
     }
 }
 
+impl Distribution<G1> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> G1 {
+        let fr:Fr = rng.gen();
+        G1::one().mul(fr)
+    }
+}
+
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(C)]
 pub struct G2(groups::G2);
@@ -222,6 +256,13 @@ impl Mul<Fr> for G2 {
     }
 }
 
+impl Distribution<G2> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> G2 {
+        let fr:Fr = rng.gen();
+        G2::one().mul(fr)
+    }
+}
+
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(C)]
 pub struct Gt(fields::Fq12);
@@ -254,4 +295,10 @@ impl Mul<Gt> for Gt {
 
 pub fn pairing(p: G1, q: G2) -> Gt {
     Gt(groups::pairing(&p.0, &q.0))
+}
+
+impl Distribution<Gt> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Gt {
+        pairing(rng.gen(), rng.gen())
+    }
 }

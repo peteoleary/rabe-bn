@@ -519,8 +519,8 @@ fn testing_divrem() {
 
         let (new_c1, new_c0) = c1q_plus_c0.divrem(&modulo);
 
-        assert!(c1 == new_c1.unwrap());
-        assert!(c0 == new_c0);
+        assert_eq!(c1, new_c1.unwrap());
+        assert_eq!(c0, new_c0);
     }
 
     {

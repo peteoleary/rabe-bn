@@ -223,7 +223,7 @@ impl<P: GroupParams> GroupElement for G<P> {
     }
 
     fn random<R: Rng>(rng: &mut R) -> Self {
-        P::one() * Fr::random(rng)
+        P::one() * rng.gen()
     }
 
     fn is_zero(&self) -> bool {

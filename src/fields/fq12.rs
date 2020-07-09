@@ -1,10 +1,7 @@
 use fields::{FieldElement, Fq2, Fq, Fq6, const_fq};
 use std::ops::{Add, Sub, Mul, Neg};
 use rand::Rng;
-
 use arith::U256;
-
-use serde::ser::Serialize;
 
 fn frobenius_coeffs_c1(power: usize) -> Fq2 {
     match power % 12 {
