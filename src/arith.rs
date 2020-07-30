@@ -17,6 +17,7 @@ pub struct U512(pub [u64; 8]);
 
 impl U512 {
     /// Multiplies c1 by modulo, adds c0.
+    #[allow(dead_code)]
     pub fn from(c1: &U256, c0: &U256, modulo: &U256) -> U512 {
         let mut res = [0; 8];
 

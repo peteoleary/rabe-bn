@@ -13,14 +13,10 @@ mod arith;
 mod fields;
 mod groups;
 
-use std::fmt;
 use fields::FieldElement;
 use groups::GroupElement;
 use std::ops::{Add, Sub, Mul, Neg};
-use rand::{
-    Rng,
-    distributions::{Distribution, Standard}
-};
+use rand::{Rng, distributions::{Distribution, Standard}, thread_rng};
 
 use serde::ser::Serialize;
 use serde::de::DeserializeOwned;
@@ -182,9 +178,8 @@ impl Mul<Fr> for G1 {
 }
 
 impl Distribution<G1> for Standard {
-    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> G1 {
-        let fr:Fr = rng.gen();
-        G1::one().mul(fr)
+    fn sample<R: Rng + ?Sized>(&self, _rng: &mut R) -> G1 {
+        G1(groups::G1::random(&mut thread_rng()))
     }
 }
 
@@ -248,9 +243,8 @@ impl Mul<Fr> for G2 {
 }
 
 impl Distribution<G2> for Standard {
-    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> G2 {
-        let fr:Fr = rng.gen();
-        G2::one().mul(fr)
+    fn sample<R: Rng + ?Sized>(&self, _rng: &mut R) -> G2 {
+        G2(groups::G2::random(&mut thread_rng()))
     }
 }
 

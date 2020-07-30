@@ -6,7 +6,6 @@ use rand::Rng;
 
 use serde::ser::Serialize;
 use serde::de::DeserializeOwned;
-use std::time::SystemTime;
 
 pub trait GroupElement
     : Sized
@@ -224,7 +223,7 @@ impl<P: GroupParams> GroupElement for G<P> {
     }
 
     fn random<R: Rng>(rng: &mut R) -> Self {
-        P::one() * rng.gen()
+        P::one() * Fr::random(rng)
     }
 
     fn is_zero(&self) -> bool {
