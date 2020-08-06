@@ -12,6 +12,7 @@ homepage = "https://github.com/georgbramm/rabe-bn"
 repository = "https://github.com/georgbramm/rabe-bn"
 documentation = "https://docs.rs/rabe-bn"
 license = "MIT OR Apache-2.0"
+exclude = ["bn.iml", "/.idea"]
 
 [[bench]]
 name = "api"
