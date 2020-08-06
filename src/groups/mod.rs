@@ -975,6 +975,7 @@ fn test_reduced_pairing() {
 fn test_binlinearity() {
     use rand::SeedableRng;
     use rand::rngs::StdRng;
+    use std::time::SystemTime;
     let d = SystemTime::now()
         .duration_since(SystemTime::UNIX_EPOCH)
         .expect("Duration since UNIX_EPOCH failed");
