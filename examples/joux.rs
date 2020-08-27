@@ -1,6 +1,6 @@
 extern crate rabe_bn;
 extern crate rand;
-use bn::{Group, Fr, G1, G2, pairing};
+use rabe_bn::{Group, Fr, G1, G2, pairing};
 use rand::Rng;
 
 fn main() {

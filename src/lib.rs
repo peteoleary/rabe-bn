@@ -7,7 +7,6 @@ extern crate rand;
 extern crate byteorder;
 #[macro_use]
 extern crate arrayref;
-extern crate serde_hex;
 extern crate core;
 
 mod arith;
