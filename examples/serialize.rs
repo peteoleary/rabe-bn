@@ -4,7 +4,6 @@
 extern crate rabe_bn;
 extern crate rand;
 
-use rabe_bn::*;
 use rand::Rng;
 use rabe_bn::Gt;
 
