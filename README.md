@@ -14,13 +14,13 @@ Add the `bn` crate to your dependencies in `Cargo.toml`...
 
 ```toml
 [dependencies]
-bn = "0.4.3"
+rabe-bn = "0.4.8"
 ```
 
 ...and add an `extern crate` declaration to your crate root:
 
 ```rust
-extern crate bn;
+extern crate rabe_bn;
 ```
 
 ## API
@@ -29,33 +29,6 @@ extern crate bn;
 * `G1` is a point on the BN curve E/Fq : y^2 = x^3 + b
 * `G2` is a point on the twisted BN curve E'/Fq2 : y^2 = x^3 + b/xi
 * `Gt` is a group element (written multiplicatively) obtained with the `pairing` function over `G1` and `G2`.
-
-### Examples
-
-#### Joux's key agreement protocol
-
-In a typical Diffie-Hellman key exchange, relying on ECDLP, a three-party key exchange requires two rounds. A single round protocol is possible through the use of a bilinear pairing: given Alice's public key *a*P<sub>1</sub> and Bob's public key *b*P<sub>2</sub>, Carol can compute the shared secret with her private key *c* by *e*(*a*P<sub>1</sub>, *b*P<sub>2</sub>)<sup>c</sup>.
-
-(See `examples/joux.rs` for the full example.)
-
-```rust
-// Generate private keys
-let alice_sk = Fr::random(rng);
-let bob_sk = Fr::random(rng);
-let carol_sk = Fr::random(rng);
-
-// Generate public keys in G1 and G2
-let (alice_pk1, alice_pk2) = (G1::one() * alice_sk, G2::one() * alice_sk);
-let (bob_pk1, bob_pk2) = (G1::one() * bob_sk, G2::one() * bob_sk);
-let (carol_pk1, carol_pk2) = (G1::one() * carol_sk, G2::one() * carol_sk);
-
-// Each party computes the shared secret
-let alice_ss = pairing(bob_pk1, carol_pk2).pow(alice_sk);
-let bob_ss = pairing(carol_pk1, alice_pk2).pow(bob_sk);
-let carol_ss = pairing(alice_pk1, bob_pk2).pow(carol_sk);
-
-assert!(alice_ss == bob_ss && bob_ss == carol_ss);
-```
 
 ## License
 
@@ -71,6 +44,7 @@ Copyright 2016 [Zcash Electric Coin Company](https://z.cash/). The Zcash Company
 ### Authors
 
 * [Sean Bowe](https://github.com/ebfull)
+* [Georg Bramm](https://github.com/georgbramm)
 
 ### Contribution
 
