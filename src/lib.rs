@@ -291,6 +291,12 @@ impl fmt::Display for Gt {
     }
 }
 
+impl std::convert::From<Gt> for Vec<u8> {
+    fn from(elem: Gt) -> Self {
+        format!("{}", elem).into_bytes()
+    }
+}
+
 fn pop(barry: &[u8]) -> [u8; 64] {
     let mut array = [0u8; 64];
     for (&x, p) in barry.iter().zip(array.iter_mut()) {
