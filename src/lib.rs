@@ -1,12 +1,8 @@
 #[macro_use]
 extern crate serde_derive;
-
 extern crate serde;
-extern crate serde_json;
 extern crate rand;
 extern crate byteorder;
-#[macro_use]
-extern crate arrayref;
 extern crate core;
 
 mod arith;
@@ -86,14 +82,14 @@ impl Mul for Fr {
 impl Distribution<crate::fields::Fr> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> crate::fields::Fr {
         let random_bytes: Vec<u8> = (0..64).map(|_| { rng.gen::<u8>() }).collect();
-        crate::fields::Fr::interpret(array_ref!(random_bytes[..], 0, 64))
+        crate::fields::Fr::interpret(&pop(random_bytes.as_ref()))
     }
 }
 
 impl Distribution<Fr> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Fr {
         let random_bytes: Vec<u8> = (0..64).map(|_| { rng.gen::<u8>() }).collect();
-        Fr::interpret(array_ref!(random_bytes[..], 0, 64))
+        Fr::interpret(&pop(random_bytes.as_ref()))
     }
 }
 
@@ -293,4 +289,12 @@ impl fmt::Display for Gt {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.0)
     }
+}
+
+fn pop(barry: &[u8]) -> [u8; 64] {
+    let mut array = [0u8; 64];
+    for (&x, p) in barry.iter().zip(array.iter_mut()) {
+        *p = x;
+    }
+    array
 }
