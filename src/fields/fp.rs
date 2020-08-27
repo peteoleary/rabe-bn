@@ -3,6 +3,7 @@ use std::ops::{Add, Sub, Mul, Neg};
 use super::FieldElement;
 
 use arith::{U512, U256};
+use core::fmt;
 
 macro_rules! field_impl {
     ($name:ident, $modulus:expr, $rsquared:expr, $rcubed:expr, $one:expr, $inv:expr) => {
@@ -156,6 +157,13 @@ macro_rules! field_impl {
                 self
             }
         }
+
+        impl fmt::Display for $name {
+            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+                write!(f, "{}", self.0)
+            }
+        }
+
     }
 }
 

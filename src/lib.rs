@@ -8,6 +8,7 @@ extern crate byteorder;
 #[macro_use]
 extern crate arrayref;
 extern crate serde_hex;
+extern crate core;
 
 mod arith;
 mod fields;
@@ -20,6 +21,7 @@ use rand::{Rng, distributions::{Distribution, Standard}, thread_rng};
 
 use serde::ser::Serialize;
 use serde::de::DeserializeOwned;
+use core::fmt;
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(C)]
@@ -285,5 +287,11 @@ pub fn pairing(p: G1, q: G2) -> Gt {
 impl Distribution<Gt> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Gt {
         pairing(rng.gen(), rng.gen())
+    }
+}
+
+impl fmt::Display for Gt {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
     }
 }

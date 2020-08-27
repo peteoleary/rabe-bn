@@ -1,6 +1,6 @@
 use std::cmp::Ordering;
 use rand::Rng;
-
+use core::fmt;
 use byteorder::{ByteOrder, BigEndian};
 
 /// 256-bit, stack allocated biginteger for use in prime field
@@ -157,6 +157,18 @@ impl Decodable for U256 {
     }
 }
 */
+
+
+
+impl fmt::Display for U256 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut str = String::new();
+        for tup in self.0.iter() {
+            str.push_str(format!("{:#X?}", tup).as_ref())
+        }
+        write!(f, "{:?}", str)
+    }
+}
 
 impl Ord for U256 {
     #[inline]

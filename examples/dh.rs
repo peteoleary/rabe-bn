@@ -1,7 +1,7 @@
 // This is an example of three-party Diffie-Hellman key exchange
 // Requires two rounds
 
-extern crate bn;
+extern crate rabe_bn;
 extern crate rand;
 
 use bn::*;

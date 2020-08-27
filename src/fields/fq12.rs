@@ -2,6 +2,7 @@ use fields::{FieldElement, Fq2, Fq, Fq6, const_fq};
 use std::ops::{Add, Sub, Mul, Neg};
 use rand::Rng;
 use arith::U256;
+use core::fmt;
 
 fn frobenius_coeffs_c1(power: usize) -> Fq2 {
     match power % 12 {
@@ -374,5 +375,11 @@ impl Neg for Fq12 {
             c0: -self.c0,
             c1: -self.c1,
         }
+    }
+}
+
+impl fmt::Display for Fq12 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{{{},{}}}", self.c0, self.c1)
     }
 }

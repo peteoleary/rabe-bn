@@ -1,4 +1,4 @@
-extern crate bn;
+extern crate rabe_bn;
 extern crate rand;
 use bn::{Group, Fr, G1, G2, pairing};
 use rand::Rng;

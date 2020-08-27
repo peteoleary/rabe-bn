@@ -1,6 +1,7 @@
 use fields::{FieldElement, const_fq, Fq};
 use std::ops::{Add, Sub, Mul, Neg};
 use rand::Rng;
+use core::fmt;
 
 #[inline]
 fn fq_non_residue() -> Fq {
@@ -196,5 +197,11 @@ impl Neg for Fq2 {
             c0: -self.c0,
             c1: -self.c1,
         }
+    }
+}
+
+impl fmt::Display for Fq2 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "[{},{}]", self.c0, self.c1)
     }
 }

@@ -1,6 +1,7 @@
 use fields::{FieldElement, Fq, Fq2, const_fq};
 use std::ops::{Add, Sub, Mul, Neg};
 use rand::Rng;
+use core::fmt;
 
 fn frobenius_coeffs_c1(n: usize) -> Fq2 {
     match n % 6 {
@@ -272,5 +273,11 @@ impl Neg for Fq6 {
             c1: -self.c1,
             c2: -self.c2,
         }
+    }
+}
+
+impl fmt::Display for Fq6 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "({},{},{})", self.c0, self.c1, self.c2)
     }
 }

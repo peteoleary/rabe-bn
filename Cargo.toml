@@ -1,6 +1,6 @@
 [package]
 name = "rabe-bn"
-version = "0.4.6"
+version = "0.4.7"
 authors = [
     "Sean Bowe <ewillbefull@gmail.com>",
     "Bramm, Georg <georg.bramm@aisec.fraunhofer.de>"
@@ -13,6 +13,10 @@ repository = "https://github.com/georgbramm/rabe-bn"
 documentation = "https://docs.rs/rabe-bn"
 license = "MIT OR Apache-2.0"
 exclude = ["bn.iml", "/.idea"]
+
+[[bin]]
+path = "examples/serialize.rs"
+name = "serialize"
 
 [[bench]]
 name = "api"

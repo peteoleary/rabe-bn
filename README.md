@@ -1,4 +1,4 @@
-# bn [![Crates.io](https://img.shields.io/crates/v/bn.svg)](https://crates.io/crates/bn) [![Build status](https://api.travis-ci.org/zcash/bn.svg)](https://travis-ci.org/zcash/bn)
+# bn [![Crates.io](https://img.shields.io/crates/v/rabe-bn.svg)](https://crates.io/crates/rabe-bn) [![Build status](https://api.travis-ci.org/zcash/bn.svg)](https://travis-ci.org/zcash/bn)
 
 This is a [pairing cryptography](https://en.wikipedia.org/wiki/Pairing-based_cryptography) library written in pure Rust. It makes use of the Barreto-Naehrig (BN) curve construction from [[BCTV2015]](https://eprint.iacr.org/2013/879.pdf) to provide two cyclic groups **G<sub>1</sub>** and **G<sub>2</sub>**, with an efficient bilinear pairing:
 
