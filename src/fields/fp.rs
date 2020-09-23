@@ -7,7 +7,7 @@ use core::fmt;
 
 macro_rules! field_impl {
     ($name:ident, $modulus:expr, $rsquared:expr, $rcubed:expr, $one:expr, $inv:expr) => {
-        #[derive(Copy, Clone, PartialEq, Eq, Debug, Serialize, Deserialize)]
+        #[derive(Copy, Clone, PartialEq, Eq, Debug)]
         #[repr(C)]
         pub struct $name(U256);
 

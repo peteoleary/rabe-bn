@@ -1,17 +1,17 @@
 use std::cmp::Ordering;
 use rand::Rng;
 use core::fmt;
-use byteorder::{ByteOrder, BigEndian};
+use byteorder::BigEndian;
 
 /// 256-bit, stack allocated biginteger for use in prime field
 /// arithmetic.
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 #[repr(C)]
 pub struct U256(pub [u64; 4]);
 
 /// 512-bit, stack allocated biginteger for use in extension
 /// field serialization and scalar interpretation.
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 #[repr(C)]
 pub struct U512(pub [u64; 8]);
 
@@ -86,6 +86,7 @@ impl U512 {
     }
 
     pub fn interpret(buf: &[u8; 64]) -> U512 {
+        use byteorder::ByteOrder;
         let mut n = [0; 8];
         for (l, i) in (0..8).rev().zip((0..8).map(|i| i * 8)) {
             n[l] = BigEndian::read_u64(&buf[i..]);

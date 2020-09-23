@@ -4,9 +4,6 @@ use arith::U256;
 use std::fmt;
 use rand::Rng;
 
-use serde::ser::Serialize;
-use serde::de::DeserializeOwned;
-
 pub trait GroupElement
     : Sized
     + Copy
@@ -26,7 +23,7 @@ pub trait GroupElement
 }
 
 pub trait GroupParams: Sized {
-    type Base: FieldElement + Serialize + DeserializeOwned;
+    type Base: FieldElement;
 
     fn name() -> &'static str;
     fn one() -> G<Self>;
@@ -36,7 +33,6 @@ pub trait GroupParams: Sized {
     }
 }
 
-#[derive(Serialize, Deserialize)]
 #[repr(C)]
 pub struct G<P: GroupParams> {
     x: P::Base,
@@ -44,7 +40,6 @@ pub struct G<P: GroupParams> {
     z: P::Base,
 }
 
-#[derive(Serialize, Deserialize)]
 pub struct AffineG<P: GroupParams> {
     x: P::Base,
     y: P::Base,

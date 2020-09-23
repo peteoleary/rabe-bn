@@ -1,6 +1,3 @@
-#[macro_use]
-extern crate serde_derive;
-extern crate serde;
 extern crate rand;
 extern crate byteorder;
 extern crate core;
@@ -13,12 +10,9 @@ use fields::FieldElement;
 use groups::GroupElement;
 use std::ops::{Add, Sub, Mul, Neg};
 use rand::{Rng, distributions::{Distribution, Standard}, thread_rng};
-
-use serde::ser::Serialize;
-use serde::de::DeserializeOwned;
 use core::fmt;
 
-#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Copy, Clone, PartialEq, Eq)]
 #[repr(C)]
 pub struct Fr(fields::Fr);
 
@@ -101,8 +95,6 @@ pub trait Group
     + Clone
     + PartialEq
     + Eq
-    + Serialize
-    + DeserializeOwned
     + Sized
     + Add<Self, Output = Self>
     + Sub<Self, Output = Self>
@@ -115,7 +107,7 @@ pub trait Group
     fn normalize(&mut self);
 }
 
-#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Copy, Clone, PartialEq, Eq)]
 #[repr(C)]
 pub struct G1(groups::G1);
 
@@ -180,7 +172,7 @@ impl Distribution<G1> for Standard {
     }
 }
 
-#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Copy, Clone, PartialEq, Eq)]
 #[repr(C)]
 pub struct G2(groups::G2);
 
@@ -245,7 +237,7 @@ impl Distribution<G2> for Standard {
     }
 }
 
-#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Copy, Clone, PartialEq, Eq)]
 #[repr(C)]
 pub struct Gt(fields::Fq12);
 
@@ -262,7 +254,7 @@ impl Gt {
 }
 
 pub trait SerializableGt
-    : 'static + Copy + Clone + Serialize + DeserializeOwned + PartialEq + Eq {
+    : 'static + Copy + Clone + PartialEq + Eq {
 }
 
 impl SerializableGt for Gt {}
