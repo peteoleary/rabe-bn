@@ -93,6 +93,18 @@ impl Distribution<Fr> for Standard {
     }
 }
 
+impl fmt::Display for Fr {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self)
+    }
+}
+
+impl std::convert::From<Fr> for Vec<u8> {
+    fn from(elem: Fr) -> Self {
+        format!("{}", elem).into_bytes()
+    }
+}
+
 pub trait Group
     : 'static
     + Send
