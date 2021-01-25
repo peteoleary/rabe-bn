@@ -180,6 +180,18 @@ impl Distribution<G1> for Standard {
     }
 }
 
+impl fmt::Display for G1 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self)
+    }
+}
+
+impl std::convert::From<G1> for Vec<u8> {
+    fn from(elem: G1) -> Self {
+        format!("{}", elem).into_bytes()
+    }
+}
+
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(C)]
 pub struct G2(groups::G2);

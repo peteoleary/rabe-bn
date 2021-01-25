@@ -1,6 +1,6 @@
 [package]
 name = "rabe-bn"
-version = "0.4.11"
+version = "0.4.12"
 authors = [
     "Sean Bowe <ewillbefull@gmail.com>",
     "Bramm, Georg <georg.bramm@aisec.fraunhofer.de>"
