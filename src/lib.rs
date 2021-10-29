@@ -5,7 +5,7 @@ extern crate rand;
 extern crate byteorder;
 extern crate core;
 
-mod arith;
+pub mod arith;
 mod fields;
 mod groups;
 
