@@ -2,6 +2,7 @@ use std::cmp::Ordering;
 use rand::Rng;
 use core::fmt;
 use byteorder::{ByteOrder, BigEndian};
+use std::iter::FromIterator;
 
 /// 256-bit, stack allocated biginteger for use in prime field
 /// arithmetic.
@@ -92,6 +93,32 @@ impl U512 {
         }
 
         U512(n)
+    }
+}
+
+impl fmt::Display for U512 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut str = String::new();
+        for tup in self.0.iter() {
+            str.push_str(format!("{:#X?}", tup).as_ref())
+        }
+        write!(f, "{:?}", str)
+    }
+}
+
+impl FromIterator<u64> for U512 {
+    fn from_iter<I: IntoIterator<Item=u64>>(iter: I) -> Self {
+        let mut barry: Vec<u8> = Vec::new();
+        for word in iter {
+            for v in word.to_le_bytes() {
+                barry.push(v)
+            }
+        }
+        let mut array = [0u8; 64];
+        for (&x, p) in barry.iter().zip(array.iter_mut()) {
+            *p = x;
+        }
+        U512::interpret(&array)
     }
 }
 
