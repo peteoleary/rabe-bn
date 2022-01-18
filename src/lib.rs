@@ -3,7 +3,6 @@ extern crate serde_derive;
 extern crate serde;
 extern crate rand;
 extern crate byteorder;
-extern crate boolvec;
 extern crate core;
 
 pub mod arith;
@@ -14,12 +13,10 @@ use fields::FieldElement;
 use groups::GroupElement;
 use std::ops::{Add, Sub, Mul, Neg};
 use rand::{Rng, distributions::{Distribution, Standard}, thread_rng};
-
 use serde::ser::Serialize;
 use serde::de::DeserializeOwned;
 use core::fmt;
-use arith::U512;
-use boolvec::BoolVec;
+use std::convert::TryInto;
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(C)]
@@ -48,13 +45,9 @@ impl Fr {
     pub fn interpret(buf: &[u8; 64]) -> Fr {
         Fr(fields::Fr::interpret(buf))
     }
-    pub fn from_boolvec(buf: &BoolVec) -> Option<Fr> {
-        if buf.capacity() == 64 {
-            let mut array = [0u8; 64];
-            for (&x, p) in buf.bytes().zip(array.iter_mut()) {
-                *p = x;
-            }
-            Some(Fr(fields::Fr::interpret(&array)));
+    pub fn from_vec(buf: &Vec<u8>) -> Option<Fr> {
+        if buf.len() == 64 {
+            Some(Fr(fields::Fr::interpret(buf.as_slice().try_into().expect("vec with incorrect length"))));
         }
         None
     }

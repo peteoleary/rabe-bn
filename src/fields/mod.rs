@@ -26,7 +26,7 @@ pub trait FieldElement: Sized
 {
     fn zero() -> Self;
     fn one() -> Self;
-    fn random<R: Rng>(&mut R) -> Self;
+    fn random<R: Rng>(_: &mut R) -> Self;
     fn is_zero(&self) -> bool;
     fn squared(&self) -> Self {
         (*self) * (*self)

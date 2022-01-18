@@ -18,7 +18,6 @@ exclude = ["bn.iml", "/.idea"]
 name = "api"
 
 [dependencies]
-boolvec = "0.2.6"
 byteorder = "1.3.4"
 rand = "0.7.3"
 serde = "1.0.118"
