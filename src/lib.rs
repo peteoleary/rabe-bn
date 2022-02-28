@@ -101,7 +101,7 @@ impl Distribution<Fr> for Standard {
 
 impl fmt::Display for Fr {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self)
+        write!(f, "{}", self.0)
     }
 }
 
@@ -200,7 +200,7 @@ impl Distribution<G1> for Standard {
 
 impl fmt::Display for G1 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self)
+        write!(f, "{}", self.0)
     }
 }
 

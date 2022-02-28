@@ -26,7 +26,7 @@ pub trait GroupElement
 }
 
 pub trait GroupParams: Sized {
-    type Base: FieldElement + Serialize + DeserializeOwned;
+    type Base: FieldElement + Serialize + DeserializeOwned + fmt::Display;
 
     fn name() -> &'static str;
     fn one() -> G<Self>;
@@ -249,6 +249,12 @@ impl<P: GroupParams> GroupElement for G<P> {
             y: e * (d - x3) - eight_c,
             z: y1z1 + y1z1,
         }
+    }
+}
+
+impl<P: GroupParams> fmt::Display for G<P> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{} {} {}", self.x, self.y, self.z)
     }
 }
 
