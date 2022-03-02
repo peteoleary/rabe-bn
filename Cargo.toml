@@ -1,6 +1,6 @@
 [package]
 name = "rabe-bn"
-version = "0.4.16"
+version = "0.4.17"
 authors = [
     "Sean Bowe <ewillbefull@gmail.com>",
     "Bramm, Georg <georg.bramm@aisec.fraunhofer.de>"
@@ -12,7 +12,7 @@ homepage = "https://github.com/georgbramm/rabe-bn"
 repository = "https://github.com/georgbramm/rabe-bn"
 documentation = "https://docs.rs/rabe-bn"
 license = "MIT OR Apache-2.0"
-exclude = ["bn.iml", "/.idea"]
+exclude = ["rabe-bn.iml", "/.idea"]
 
 [[bench]]
 name = "api"

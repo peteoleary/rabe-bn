@@ -14,7 +14,7 @@ Add the `bn` crate to your dependencies in `Cargo.toml`...
 
 ```toml
 [dependencies]
-rabe-bn = "0.4.10"
+rabe-bn = "0.4.17"
 ```
 
 ...and add an `extern crate` declaration to your crate root:
