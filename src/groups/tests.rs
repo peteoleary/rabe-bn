@@ -8,6 +8,7 @@ fn random_test_addition<G: GroupElement, R: Rng>(rng: &mut R) {
         let r2 = G::random(rng);
         let r3 = G::random(rng);
 
+
         assert_eq!((r1 + r2) + r3, r1 + (r2 + r3));
         assert!(((r1 + r2 + r3) - r2 - r3 - r1).is_zero());
     }

@@ -25,6 +25,7 @@ pub trait GroupElement
     fn double(&self) -> Self;
 }
 
+
 pub trait GroupParams: Sized {
     type Base: FieldElement + Serialize + DeserializeOwned + fmt::Display;
 
@@ -115,6 +116,13 @@ impl<P: GroupParams> PartialEq for G<P> {
 impl<P: GroupParams> Eq for G<P> {}
 
 impl<P: GroupParams> G<P> {
+    pub fn into_bytes(&self) -> Vec<u8> {
+        [
+            self.x.into_bytes(),
+            self.y.into_bytes(),
+            self.z.into_bytes()
+        ].concat()
+    }
     pub fn to_affine(&self) -> Option<AffineG<P>> {
         if self.z.is_zero() {
             None
@@ -144,70 +152,6 @@ impl<P: GroupParams> AffineG<P> {
         }
     }
 }
-/*
-impl<P: GroupParams> Encodable for G<P> {
-    fn encode<S: Encoder>(&self, s: &mut S) -> Result<(), S::Error> {
-        if self.is_zero() {
-            let l: u8 = 0;
-            l.encode(s)
-        } else {
-            let l: u8 = 4;
-            try!(l.encode(s));
-            self.to_affine().unwrap().encode(s)
-        }
-    }
-}
-
-impl<P: GroupParams> Encodable for AffineG<P> {
-    fn encode<S: Encoder>(&self, s: &mut S) -> Result<(), S::Error> {
-        try!(self.x.encode(s));
-        try!(self.y.encode(s));
-
-        Ok(())
-    }
-}
-
-impl<P: GroupParams> Decodable for G<P> {
-    fn decode<S: Decoder>(s: &mut S) -> Result<G<P>, S::Error> {
-        let l = try!(u8::decode(s));
-        if l == 0 {
-            Ok(G::zero())
-        } else if l == 4 {
-            Ok(try!(AffineG::decode(s)).to_jacobian())
-        } else {
-            Err(s.error(
-                "invalid leading byte for uncompressed group element",
-            ))
-        }
-    }
-}
-
-impl<P: GroupParams> Decodable for AffineG<P> {
-    fn decode<S: Decoder>(s: &mut S) -> Result<AffineG<P>, S::Error> {
-        let x = try!(P::Base::decode(s));
-        let y = try!(P::Base::decode(s));
-
-        // y^2 = x^3 + b
-        if y.squared() == (x.squared() * x) + P::coeff_b() {
-            if P::check_order() {
-                let p: G<P> = G {
-                    x: x,
-                    y: y,
-                    z: P::Base::one(),
-                };
-
-                if (p * (-Fr::one())) + p != G::zero() {
-                    return Err(s.error("point is not in the subgroup"));
-                }
-            }
-
-            Ok(AffineG { x: x, y: y })
-        } else {
-            Err(s.error("point is not on the curve"))
-        }
-    }
-}
-*/
 
 impl<P: GroupParams> GroupElement for G<P> {
     fn zero() -> Self {

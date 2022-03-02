@@ -102,6 +102,11 @@ macro_rules! field_impl {
                 self.0.is_zero()
             }
 
+            #[inline]
+            fn into_bytes(self) -> Vec<u8> {
+                self.0.into_bytes()
+            }
+
             fn inverse(mut self) -> Option<Self> {
                 if self.is_zero() {
                     None

@@ -329,6 +329,13 @@ impl FieldElement for Fq12 {
             None => None,
         }
     }
+
+    fn into_bytes(self) -> Vec<u8> {
+        [
+            self.c0.into_bytes(),
+            self.c1.into_bytes()
+        ].concat()
+    }
 }
 
 impl Mul for Fq12 {

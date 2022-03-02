@@ -11,7 +11,13 @@ mod groups;
 
 use fields::FieldElement;
 use groups::GroupElement;
-use std::ops::{Add, Sub, Mul, Neg};
+use std::{
+    fmt::{
+        Debug,
+        Formatter
+    },
+    ops::{Add, Sub, Mul, Neg}
+};
 use rand::{Rng, distributions::{Distribution, Standard}, thread_rng};
 use serde::ser::Serialize;
 use serde::de::DeserializeOwned;
@@ -44,6 +50,9 @@ impl Fr {
     }
     pub fn interpret(buf: &[u8; 64]) -> Fr {
         Fr(fields::Fr::interpret(buf))
+    }
+    pub fn into_bytes(&self) -> Vec<u8> {
+        self.0.into_bytes()
     }
     pub fn from_vec(buf: &Vec<u8>) -> Option<Fr> {
         if buf.len() == 64 {
@@ -111,6 +120,14 @@ impl std::convert::From<Fr> for Vec<u8> {
     }
 }
 
+impl Debug for Fr {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Fr")
+            .field("::Fr", &self.0)
+            .finish()
+    }
+}
+
 pub trait Group
     : 'static
     + Send
@@ -130,6 +147,7 @@ pub trait Group
     fn one() -> Self;
     fn random<R: Rng>(rng: &mut R) -> Self;
     fn is_zero(&self) -> bool;
+    fn into_bytes(&self) -> Vec<u8>;
     fn normalize(&mut self);
 }
 
@@ -149,6 +167,9 @@ impl Group for G1 {
     }
     fn is_zero(&self) -> bool {
         self.0.is_zero()
+    }
+    fn into_bytes(&self) -> Vec<u8> {
+        self.0.into_bytes()
     }
     fn normalize(&mut self) {
         let new = match self.0.to_affine() {
@@ -210,6 +231,14 @@ impl std::convert::From<G1> for Vec<u8> {
     }
 }
 
+impl Debug for G1 {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("G1")
+            .field("::G1", &self.0)
+            .finish()
+    }
+}
+
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(C)]
 pub struct G2(groups::G2);
@@ -227,6 +256,8 @@ impl Group for G2 {
     fn is_zero(&self) -> bool {
         self.0.is_zero()
     }
+    fn into_bytes(&self) -> Vec<u8> { self.0.into_bytes() }
+
     fn normalize(&mut self) {
         let new = match self.0.to_affine() {
             Some(a) => a,
@@ -275,6 +306,14 @@ impl Distribution<G2> for Standard {
     }
 }
 
+impl Debug for G2 {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("G2")
+            .field("::G2", &self.0)
+            .finish()
+    }
+}
+
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(C)]
 pub struct Gt(fields::Fq12);
@@ -288,6 +327,9 @@ impl Gt {
     }
     pub fn inverse(&self) -> Self {
         Gt(self.0.inverse().unwrap())
+    }
+    pub fn into_bytes(&self) -> Vec<u8> {
+        self.0.into_bytes()
     }
 }
 
@@ -318,6 +360,14 @@ impl Distribution<Gt> for Standard {
 impl fmt::Display for Gt {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.0)
+    }
+}
+
+impl Debug for Gt {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Gt")
+            .field("::Fq12", &self.0)
+            .finish()
     }
 }
 

@@ -32,6 +32,7 @@ pub trait FieldElement: Sized
         (*self) * (*self)
     }
     fn inverse(self) -> Option<Self>;
+    fn into_bytes(self) -> Vec<u8>;
     fn pow<I: Into<U256>>(&self, by: I) -> Self {
         let mut res = Self::one();
 

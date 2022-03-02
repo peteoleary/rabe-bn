@@ -165,6 +165,16 @@ impl U256 {
         U256([1, 0, 0, 0])
     }
 
+    #[inline]
+    pub fn into_bytes(&self) -> Vec<u8> {
+        use byteorder::WriteBytesExt;
+        let mut vec8: Vec<u8> = vec![];
+        for elem in self.0 {
+            vec8.write_u64::<BigEndian>(elem).unwrap();
+        }
+        vec8
+    }
+
     /// Produce a random number (mod `modulo`)
     pub fn random<R: Rng>(rng: &mut R, modulo: &U256) -> U256 {
         U512::random(rng).divrem(modulo).1
