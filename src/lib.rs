@@ -116,7 +116,7 @@ impl fmt::Display for Fr {
 
 impl std::convert::From<Fr> for Vec<u8> {
     fn from(elem: Fr) -> Self {
-        format!("{}", elem).into_bytes()
+        elem.into_bytes()
     }
 }
 
@@ -227,7 +227,7 @@ impl fmt::Display for G1 {
 
 impl std::convert::From<G1> for Vec<u8> {
     fn from(elem: G1) -> Self {
-        format!("{}", elem).into_bytes()
+        elem.into_bytes()
     }
 }
 
@@ -373,7 +373,7 @@ impl Debug for Gt {
 
 impl std::convert::From<Gt> for Vec<u8> {
     fn from(elem: Gt) -> Self {
-        format!("{}", elem).into_bytes()
+        elem.into_bytes()
     }
 }
 
