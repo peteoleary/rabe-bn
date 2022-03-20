@@ -2,10 +2,10 @@ use std::ops::{Add, Sub, Neg, Mul};
 use fields::{FieldElement, Fq, Fq2, Fq12, Fr, const_fq, fq2_nonresidue};
 use arith::U256;
 use std::fmt;
-use rand::Rng;
 
 use serde::ser::Serialize;
 use serde::de::DeserializeOwned;
+use rand::Rng;
 
 pub trait GroupElement
     : Sized
@@ -113,6 +113,7 @@ impl<P: GroupParams> PartialEq for G<P> {
         return true;
     }
 }
+
 impl<P: GroupParams> Eq for G<P> {}
 
 impl<P: GroupParams> G<P> {

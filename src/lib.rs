@@ -22,11 +22,31 @@ use rand::{Rng, distributions::{Distribution, Standard}, thread_rng};
 use serde::ser::Serialize;
 use serde::de::DeserializeOwned;
 use core::fmt;
-use std::convert::TryInto;
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(C)]
 pub struct Fr(fields::Fr);
+
+#[derive(Debug)]
+pub enum FieldError {
+    InvalidSliceLength,
+    InvalidU512Encoding,
+    NotMember,
+}
+
+#[derive(Debug)]
+pub enum CurveError {
+    InvalidEncoding,
+    NotMember,
+    Field(FieldError),
+    ToAffineConversion,
+}
+
+impl From<FieldError> for CurveError {
+    fn from(fe: FieldError) -> Self {
+        CurveError::Field(fe)
+    }
+}
 
 impl Fr {
     pub fn zero() -> Self {
@@ -51,14 +71,16 @@ impl Fr {
     pub fn interpret(buf: &[u8; 64]) -> Fr {
         Fr(fields::Fr::interpret(buf))
     }
+    pub fn from_slice(slice: &[u8]) -> Result<Self, FieldError> {
+        arith::U256::from_slice(slice)
+            .map_err(|_| FieldError::InvalidSliceLength)
+            .map(|x| Fr::new_mul_factor(x))
+    }
     pub fn into_bytes(&self) -> Vec<u8> {
         self.0.into_bytes()
     }
-    pub fn from_vec(buf: &Vec<u8>) -> Option<Fr> {
-        if buf.len() == 64 {
-            Some(Fr(fields::Fr::interpret(buf.as_slice().try_into().expect("vec with incorrect length"))));
-        }
-        None
+    pub fn new_mul_factor(val: arith::U256) -> Self {
+        Fr(fields::Fr::new_mul_factor(val))
     }
 }
 
@@ -213,15 +235,15 @@ impl Mul<Fr> for G1 {
     }
 }
 
-impl Distribution<G1> for Standard {
-    fn sample<R: Rng + ?Sized>(&self, _rng: &mut R) -> G1 {
-        G1(groups::G1::random(&mut thread_rng()))
-    }
-}
-
 impl fmt::Display for G1 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.0)
+    }
+}
+
+impl Distribution<G1> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, _rng: &mut R) -> G1 {
+        G1(groups::G1::random(&mut thread_rng()))
     }
 }
 

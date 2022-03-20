@@ -4,11 +4,18 @@ use core::fmt;
 use byteorder::{ByteOrder, BigEndian};
 use std::iter::FromIterator;
 
+
 /// 256-bit, stack allocated biginteger for use in prime field
 /// arithmetic.
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(C)]
 pub struct U256(pub [u64; 4]);
+
+impl From<[u64; 4]> for U256 {
+    fn from(d: [u64; 4]) -> Self {
+        U256(d)
+    }
+}
 
 /// 512-bit, stack allocated biginteger for use in extension
 /// field serialization and scalar interpretation.
@@ -154,7 +161,29 @@ impl PartialOrd for U256 {
     }
 }
 
+/// U256/U512 errors
+#[derive(Debug)]
+pub enum Error {
+    InvalidLength { expected: usize, actual: usize },
+}
+
 impl U256 {
+    /// Initialize U256 from slice of bytes (big endian)
+    pub fn from_slice(s: &[u8]) -> Result<U256, Error> {
+        if s.len() != 32 {
+            return Err(Error::InvalidLength {
+                expected: 32,
+                actual: s.len(),
+            });
+        }
+
+        let mut n = [0; 4];
+        for (l, i) in (0..4).rev().zip((0..4).map(|i| i * 8)) {
+            n[l] = BigEndian::read_u64(&s[i..]);
+        }
+
+        Ok(U256(n))
+    }
     #[inline]
     pub fn zero() -> U256 {
         U256([0, 0, 0, 0])
