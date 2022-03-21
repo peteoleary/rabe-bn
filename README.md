@@ -14,10 +14,11 @@ Add the `bn` crate to your dependencies in `Cargo.toml`...
 
 ```toml
 [dependencies]
-rabe-bn = "0.4.18"
+rabe-bn = "0.4.20"
 ```
 
-...and add an `extern crate` declaration to your crate root:
+If you prefer borsh instead of `serde`, you may use the `borsh` feature.
+Afterwards add an `extern crate` declaration to your crate root:
 
 ```rust
 extern crate rabe_bn;

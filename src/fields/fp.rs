@@ -4,10 +4,16 @@ use super::FieldElement;
 
 use arith::{U512, U256};
 use core::fmt;
+#[cfg(feature = "borsh")]
+use borsh::{BorshSerialize, BorshDeserialize};
+#[cfg(feature = "serde")]
+use serde::{Serialize, Deserialize};
 
 macro_rules! field_impl {
     ($name:ident, $modulus:expr, $rsquared:expr, $rcubed:expr, $one:expr, $inv:expr) => {
-        #[derive(Copy, Clone, PartialEq, Eq, Debug, Serialize, Deserialize)]
+        #[derive(Copy, Clone, PartialEq, Eq, Debug)]
+        #[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
+        #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
         #[repr(C)]
         pub struct $name(U256);
 
@@ -99,7 +105,7 @@ macro_rules! field_impl {
                 $name(U256($one))
             }
             
-            fn random<R: Rng>(rng: &mut R) -> Self {
+            fn random<R: Rng + ?Sized>(rng: &mut R) -> Self {
                 $name(U256::random(rng, &U256($modulus)))
             }
 

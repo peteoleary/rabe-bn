@@ -2,10 +2,11 @@ use std::ops::{Add, Sub, Neg, Mul};
 use fields::{FieldElement, Fq, Fq2, Fq12, Fr, const_fq, fq2_nonresidue};
 use arith::U256;
 use std::fmt;
-
-use serde::ser::Serialize;
-use serde::de::DeserializeOwned;
 use rand::Rng;
+#[cfg(feature = "borsh")]
+use borsh::{BorshSerialize, BorshDeserialize};
+#[cfg(not(feature = "borsh"))]
+use serde::{de::DeserializeOwned, Serialize, Deserialize};
 
 pub trait GroupElement
     : Sized
@@ -20,13 +21,16 @@ pub trait GroupElement
     + Mul<Fr, Output = Self> {
     fn zero() -> Self;
     fn one() -> Self;
-    fn random<R: Rng>(rng: &mut R) -> Self;
+    fn random<R: Rng + ?Sized>(rng: &mut R) -> Self;
     fn is_zero(&self) -> bool;
     fn double(&self) -> Self;
 }
 
 
 pub trait GroupParams: Sized {
+    #[cfg(feature = "borsh")]
+    type Base: FieldElement + BorshSerialize + BorshDeserialize + fmt::Display;
+    #[cfg(not(feature = "borsh"))]
     type Base: FieldElement + Serialize + DeserializeOwned + fmt::Display;
 
     fn name() -> &'static str;
@@ -37,7 +41,8 @@ pub trait GroupParams: Sized {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
+#[cfg_attr(not(feature = "borsh"), derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct G<P: GroupParams> {
     x: P::Base,
@@ -45,7 +50,8 @@ pub struct G<P: GroupParams> {
     z: P::Base,
 }
 
-#[derive(Serialize, Deserialize)]
+#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
+#[cfg_attr(not(feature = "borsh"), derive(Serialize, Deserialize))]
 pub struct AffineG<P: GroupParams> {
     x: P::Base,
     y: P::Base,
@@ -167,7 +173,7 @@ impl<P: GroupParams> GroupElement for G<P> {
         P::one()
     }
 
-    fn random<R: Rng>(rng: &mut R) -> Self {
+    fn random<R: Rng + ?Sized>(rng: &mut R) -> Self {
         P::one() * Fr::random(rng)
     }
 

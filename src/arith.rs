@@ -1,13 +1,18 @@
 use std::cmp::Ordering;
 use rand::Rng;
 use core::fmt;
-use byteorder::{ByteOrder, BigEndian};
+use byteorder::{ByteOrder, BigEndian, WriteBytesExt};
 use std::iter::FromIterator;
-
+#[cfg(feature = "borsh")]
+use borsh::{BorshSerialize, BorshDeserialize};
+#[cfg(feature = "serde")]
+use serde::{Serialize, Deserialize};
 
 /// 256-bit, stack allocated biginteger for use in prime field
 /// arithmetic.
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Copy, Clone, PartialEq, Eq, Debug)]
+#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct U256(pub [u64; 4]);
 
@@ -19,7 +24,9 @@ impl From<[u64; 4]> for U256 {
 
 /// 512-bit, stack allocated biginteger for use in extension
 /// field serialization and scalar interpretation.
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Copy, Clone, PartialEq, Eq, Debug)]
+#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct U512(pub [u64; 8]);
 
@@ -52,7 +59,7 @@ impl U512 {
     }
 
     /// Get a random U512
-    pub fn random<R: Rng>(rng: &mut R) -> U512 {
+    pub fn random<R: Rng + ?Sized>(rng: &mut R) -> U512 {
         U512(rng.gen())
     }
 
@@ -196,16 +203,15 @@ impl U256 {
 
     #[inline]
     pub fn into_bytes(&self) -> Vec<u8> {
-        use byteorder::WriteBytesExt;
-        let mut vec8: Vec<u8> = vec![];
+        let mut wtr = vec![];
         for elem in self.0 {
-            vec8.write_u64::<BigEndian>(elem).unwrap();
+            wtr.write_u64::<BigEndian>(elem).unwrap();
         }
-        vec8
+        wtr
     }
 
     /// Produce a random number (mod `modulo`)
-    pub fn random<R: Rng>(rng: &mut R, modulo: &U256) -> U256 {
+    pub fn random<R: Rng + ?Sized>(rng: &mut R, modulo: &U256) -> U256 {
         U512::random(rng).divrem(modulo).1
     }
 

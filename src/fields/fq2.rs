@@ -2,6 +2,10 @@ use fields::{FieldElement, const_fq, Fq};
 use std::ops::{Add, Sub, Mul, Neg};
 use rand::Rng;
 use core::fmt;
+#[cfg(feature = "borsh")]
+use borsh::{BorshSerialize, BorshDeserialize};
+#[cfg(feature = "serde")]
+use serde::{Serialize, Deserialize};
 
 #[inline]
 fn fq_non_residue() -> Fq {
@@ -39,7 +43,9 @@ pub fn fq2_nonresidue() -> Fq2 {
     )
 }
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Copy, Clone, PartialEq, Eq, Debug)]
+#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Fq2 {
     c0: Fq,
@@ -110,7 +116,7 @@ impl FieldElement for Fq2 {
         }
     }
 
-    fn random<R: Rng>(rng: &mut R) -> Self {
+    fn random<R: Rng + ?Sized>(rng: &mut R) -> Self {
         Fq2 {
             c0: Fq::random(rng),
             c1: Fq::random(rng),

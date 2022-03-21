@@ -3,6 +3,10 @@ use std::ops::{Add, Sub, Mul, Neg};
 use rand::Rng;
 use arith::U256;
 use core::fmt;
+#[cfg(feature = "borsh")]
+use borsh::{BorshSerialize, BorshDeserialize};
+#[cfg(feature = "serde")]
+use serde::{Serialize, Deserialize};
 
 fn frobenius_coeffs_c1(power: usize) -> Fq2 {
     match power % 12 {
@@ -64,7 +68,9 @@ fn frobenius_coeffs_c1(power: usize) -> Fq2 {
     }
 }
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Copy, Clone, PartialEq, Eq, Debug)]
+#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Fq12 {
     c0: Fq6,
@@ -299,7 +305,7 @@ impl FieldElement for Fq12 {
         }
     }
 
-    fn random<R: Rng>(rng: &mut R) -> Self {
+    fn random<R: Rng + ?Sized>(rng: &mut R) -> Self {
         Fq12 {
             c0: Fq6::random(rng),
             c1: Fq6::random(rng),
