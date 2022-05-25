@@ -5,7 +5,7 @@ use std::fmt;
 use rand::Rng;
 #[cfg(feature = "borsh")]
 use borsh::{BorshSerialize, BorshDeserialize};
-#[cfg(not(feature = "borsh"))]
+#[cfg(feature = "serde")]
 use serde::{de::DeserializeOwned, Serialize, Deserialize};
 
 pub trait GroupElement
@@ -28,10 +28,12 @@ pub trait GroupElement
 
 
 pub trait GroupParams: Sized {
-    #[cfg(feature = "borsh")]
+    #[cfg(all(feature = "borsh", not(feature = "serde")))]
     type Base: FieldElement + BorshSerialize + BorshDeserialize + fmt::Display;
-    #[cfg(not(feature = "borsh"))]
+    #[cfg(all(feature = "serde", not(feature = "borsh")))]
     type Base: FieldElement + Serialize + DeserializeOwned + fmt::Display;
+    #[cfg(all(feature = "serde", feature = "borsh"))]
+    type Base: FieldElement + BorshSerialize + BorshDeserialize + fmt::Display + Serialize + DeserializeOwned;
 
     fn name() -> &'static str;
     fn one() -> G<Self>;
@@ -42,7 +44,7 @@ pub trait GroupParams: Sized {
 }
 
 #[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
-#[cfg_attr(not(feature = "borsh"), derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct G<P: GroupParams> {
     x: P::Base,
@@ -308,6 +310,8 @@ impl<P: GroupParams> Sub<G<P>> for G<P> {
     }
 }
 
+#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
+#[cfg_attr(not(feature = "borsh"), derive(Serialize, Deserialize))]
 pub struct G1Params;
 
 impl GroupParams for G1Params {
@@ -346,6 +350,8 @@ impl GroupParams for G1Params {
 
 pub type G1 = G<G1Params>;
 
+#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
+#[cfg_attr(not(feature = "borsh"), derive(Serialize, Deserialize))]
 pub struct G2Params;
 
 impl GroupParams for G2Params {

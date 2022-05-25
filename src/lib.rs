@@ -22,7 +22,7 @@ use std::{
 use rand::{Rng, distributions::{Distribution, Standard}};
 #[cfg(feature = "borsh")]
 use borsh::{BorshSerialize, BorshDeserialize};
-#[cfg(not(feature = "borsh"))]
+#[cfg(feature = "serde")]
 use serde::{
     de::DeserializeOwned,
     Serialize,
@@ -32,7 +32,7 @@ use core::fmt;
 
 #[derive(Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
-#[cfg_attr(not(feature = "borsh"), derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Fr(fields::Fr);
 
@@ -64,7 +64,7 @@ impl Fr {
     pub fn one() -> Self {
         Fr(fields::Fr::one())
     }
-    //pub fn random<R: Rng>(rng: &mut R) -> Self {        Fr(fields::Fr::random(rng))    }
+    pub fn random<R: Rng>(rng: &mut R) -> Self {        Fr(fields::Fr::random(rng))    }
     pub fn pow(&self, exp: Fr) -> Self {
         Fr(self.0.pow(exp.0))
     }
@@ -210,7 +210,7 @@ pub trait Group
 
 #[derive(Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
-#[cfg_attr(not(feature = "borsh"), derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct G1(groups::G1);
 
@@ -300,7 +300,7 @@ impl Debug for G1 {
 
 #[derive(Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
-#[cfg_attr(not(feature = "borsh"), derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct G2(groups::G2);
 
