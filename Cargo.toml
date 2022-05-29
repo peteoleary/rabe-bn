@@ -1,9 +1,10 @@
 [package]
 name = "rabe-bn"
-version = "0.4.20"
+version = "0.4.3"
 authors = [
     "Sean Bowe <ewillbefull@gmail.com>",
-    "Bramm, Georg <georg.bramm@aisec.fraunhofer.de>"
+    "Bramm, Georg <georg.bramm@aisec.fraunhofer.de>",
+    "O'Leary, Peter <pete@timelight.com>"
 ]
 description = "Pairing cryptography with the Barreto-Naehrig curve. Update to use latest rand and serde crates."
 keywords = ["pairing","crypto","cryptography"]
