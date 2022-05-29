@@ -43,6 +43,7 @@ pub trait GroupParams: Sized {
     }
 }
 
+#[derive(Default)]
 #[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
@@ -310,6 +311,7 @@ impl<P: GroupParams> Sub<G<P>> for G<P> {
     }
 }
 
+#[derive(Copy, Clone, PartialEq, Eq, Debug, Default)]
 #[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
 #[cfg_attr(not(feature = "borsh"), derive(Serialize, Deserialize))]
 pub struct G1Params;
@@ -350,6 +352,7 @@ impl GroupParams for G1Params {
 
 pub type G1 = G<G1Params>;
 
+#[derive(Copy, Clone, PartialEq, Eq, Debug, Default)]
 #[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
 #[cfg_attr(not(feature = "borsh"), derive(Serialize, Deserialize))]
 pub struct G2Params;

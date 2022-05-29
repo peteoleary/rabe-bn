@@ -11,7 +11,7 @@ use serde::{Serialize, Deserialize};
 
 macro_rules! field_impl {
     ($name:ident, $modulus:expr, $rsquared:expr, $rcubed:expr, $one:expr, $inv:expr) => {
-        #[derive(Copy, Clone, PartialEq, Eq, Debug)]
+        #[derive(Copy, Clone, PartialEq, Eq, Debug, Default)]
         #[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
         #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
         #[repr(C)]

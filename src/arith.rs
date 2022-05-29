@@ -10,7 +10,7 @@ use serde::{Serialize, Deserialize};
 
 /// 256-bit, stack allocated biginteger for use in prime field
 /// arithmetic.
-#[derive(Copy, Clone, PartialEq, Eq, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, Debug, Default)]
 #[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
