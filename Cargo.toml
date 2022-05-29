@@ -22,4 +22,3 @@ byteorder = "1.4.3"
 rand = "0.8.5"
 near-sdk = {version = "4"}
 serde = { version = "1", features = ["derive"] }
-borsh = "0.9"

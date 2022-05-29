@@ -6,8 +6,8 @@ use rand::Rng;
 
 extern crate near_sdk;
 
-use self::near_sdk::borsh::{BorshSerialize, BorshDeserialize};
-use self::near_sdk::serde::{Serialize, Deserialize, de::DeserializeOwned};
+use near_sdk::borsh::{self, BorshSerialize, BorshDeserialize};
+use near_sdk::serde::{self, Serialize, Deserialize, de::DeserializeOwned};
 
 pub trait GroupElement
     : Sized

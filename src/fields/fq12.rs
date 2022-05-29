@@ -6,8 +6,8 @@ use core::fmt;
 
 extern crate near_sdk;
 
-use self::near_sdk::borsh::{BorshSerialize, BorshDeserialize};
-use self::near_sdk::serde::{Serialize, Deserialize, de::DeserializeOwned};
+use near_sdk::borsh::{self, BorshSerialize, BorshDeserialize};
+use near_sdk::serde::{self, Serialize, Deserialize};
 
 fn frobenius_coeffs_c1(power: usize) -> Fq2 {
     match power % 12 {

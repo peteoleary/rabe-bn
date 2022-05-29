@@ -1,7 +1,7 @@
 #![feature(test)]
 extern crate test;
 extern crate rand;
-extern crate bn;
+extern crate rabe_bn as bn;
 extern crate bincode;
 
 use bn::*;
