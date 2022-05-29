@@ -2,10 +2,11 @@ use fields::{FieldElement, Fq, Fq2, const_fq};
 use std::ops::{Add, Sub, Mul, Neg};
 use rand::Rng;
 use core::fmt;
-#[cfg(feature = "borsh")]
-use borsh::{BorshSerialize, BorshDeserialize};
-#[cfg(feature = "serde")]
-use serde::{Serialize, Deserialize};
+
+extern crate near_sdk;
+
+use self::near_sdk::borsh::{BorshSerialize, BorshDeserialize};
+use self::near_sdk::serde::{Serialize, Deserialize, de::DeserializeOwned};
 
 fn frobenius_coeffs_c1(n: usize) -> Fq2 {
     match n % 6 {
@@ -127,8 +128,8 @@ fn frobenius_coeffs_c2(n: usize) -> Fq2 {
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
-#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(BorshSerialize, BorshDeserialize)]
+#[derive(Serialize, Deserialize)]
 #[repr(C)]
 pub struct Fq6 {
     pub c0: Fq2,

@@ -3,10 +3,11 @@ use fields::{FieldElement, Fq, Fq2, Fq12, Fr, const_fq, fq2_nonresidue};
 use arith::U256;
 use std::fmt;
 use rand::Rng;
-#[cfg(feature = "borsh")]
-use borsh::{BorshSerialize, BorshDeserialize};
-#[cfg(feature = "serde")]
-use serde::{de::DeserializeOwned, Serialize, Deserialize};
+
+extern crate near_sdk;
+
+use self::near_sdk::borsh::{BorshSerialize, BorshDeserialize};
+use self::near_sdk::serde::{Serialize, Deserialize, de::DeserializeOwned};
 
 pub trait GroupElement
     : Sized
@@ -28,11 +29,6 @@ pub trait GroupElement
 
 
 pub trait GroupParams: Sized {
-    #[cfg(all(feature = "borsh", not(feature = "serde")))]
-    type Base: FieldElement + BorshSerialize + BorshDeserialize + fmt::Display;
-    #[cfg(all(feature = "serde", not(feature = "borsh")))]
-    type Base: FieldElement + Serialize + DeserializeOwned + fmt::Display;
-    #[cfg(all(feature = "serde", feature = "borsh"))]
     type Base: FieldElement + BorshSerialize + BorshDeserialize + fmt::Display + Serialize + DeserializeOwned;
 
     fn name() -> &'static str;
@@ -44,8 +40,8 @@ pub trait GroupParams: Sized {
 }
 
 #[derive(Default)]
-#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(BorshSerialize, BorshDeserialize)]
+#[derive(Serialize, Deserialize)]
 #[repr(C)]
 pub struct G<P: GroupParams> {
     x: P::Base,
@@ -53,8 +49,8 @@ pub struct G<P: GroupParams> {
     z: P::Base,
 }
 
-#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
-#[cfg_attr(not(feature = "borsh"), derive(Serialize, Deserialize))]
+#[derive(BorshSerialize, BorshDeserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct AffineG<P: GroupParams> {
     x: P::Base,
     y: P::Base,
@@ -312,7 +308,7 @@ impl<P: GroupParams> Sub<G<P>> for G<P> {
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Default)]
-#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
+#[derive(BorshSerialize, BorshDeserialize)]
 #[cfg_attr(not(feature = "borsh"), derive(Serialize, Deserialize))]
 pub struct G1Params;
 
@@ -353,7 +349,7 @@ impl GroupParams for G1Params {
 pub type G1 = G<G1Params>;
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Default)]
-#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
+#[derive(BorshSerialize, BorshDeserialize)]
 #[cfg_attr(not(feature = "borsh"), derive(Serialize, Deserialize))]
 pub struct G2Params;
 

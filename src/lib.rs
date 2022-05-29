@@ -1,10 +1,11 @@
 extern crate rand;
 extern crate byteorder;
 extern crate core;
-#[cfg(feature = "borsh")]
-extern crate borsh;
-#[cfg(feature = "serde")]
-extern crate serde;
+
+extern crate near_sdk;
+
+use self::near_sdk::borsh::{BorshSerialize, BorshDeserialize};
+use self::near_sdk::serde::{Serialize, Deserialize, de::DeserializeOwned};
 
 pub mod arith;
 mod fields;
@@ -20,19 +21,12 @@ use std::{
     ops::{Add, Sub, Mul, Neg}
 };
 use rand::{Rng, distributions::{Distribution, Standard}};
-#[cfg(feature = "borsh")]
-use borsh::{BorshSerialize, BorshDeserialize};
-#[cfg(feature = "serde")]
-use serde::{
-    de::DeserializeOwned,
-    Serialize,
-    Deserialize
-};
+
 use core::fmt;
 
 #[derive(Copy, Clone, PartialEq, Eq, Default)]
-#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(BorshSerialize, BorshDeserialize)]
+#[derive(Serialize, Deserialize)]
 #[repr(C)]
 pub struct Fr(fields::Fr);
 
@@ -158,7 +152,7 @@ impl Debug for Fr {
             .finish()
     }
 }
-#[cfg(feature = "borsh")]
+
 pub trait Group
 : 'static
 + Send
@@ -167,6 +161,8 @@ pub trait Group
 + Clone
 + PartialEq
 + Eq
++ Serialize
++ DeserializeOwned
 + BorshSerialize
 + BorshDeserialize
 + Sized
@@ -183,34 +179,9 @@ pub trait Group
     fn normalize(&mut self);
 }
 
-#[cfg(not(feature = "borsh"))]
-pub trait Group
-: 'static
-+ Send
-+ Sync
-+ Copy
-+ Clone
-+ PartialEq
-+ Eq
-+ Serialize
-+ DeserializeOwned
-+ Sized
-+ Add<Self, Output = Self>
-+ Sub<Self, Output = Self>
-+ Neg<Output = Self>
-+ Mul<Fr, Output = Self>
-{
-    fn zero() -> Self;
-    fn one() -> Self;
-    fn random<R: Rng + ?Sized>(rng: &mut R) -> Self;
-    fn is_zero(&self) -> bool;
-    fn into_bytes(&self) -> Vec<u8>;
-    fn normalize(&mut self);
-}
-
 #[derive(Copy, Clone, PartialEq, Eq, Default)]
-#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Serialize, Deserialize)]
+#[derive(BorshSerialize, BorshDeserialize)]
 #[repr(C)]
 pub struct G1(groups::G1);
 
@@ -299,8 +270,8 @@ impl Debug for G1 {
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, Default)]
-#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(BorshSerialize, BorshDeserialize)]
+#[derive(Serialize, Deserialize)]
 #[repr(C)]
 pub struct G2(groups::G2);
 
@@ -376,8 +347,8 @@ impl Debug for G2 {
 }
 
 #[derive(Copy, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
-#[cfg_attr(not(feature = "borsh"), derive(Serialize, Deserialize))]
+#[derive(BorshSerialize, BorshDeserialize)]
+#[derive(Serialize, Deserialize)]
 #[repr(C)]
 pub struct Gt(fields::Fq12);
 
@@ -396,13 +367,8 @@ impl Gt {
     }
 }
 
-#[cfg(feature = "borsh")]
 pub trait SerializableGt
-    : 'static + Copy + Clone + BorshSerialize + BorshDeserialize + PartialEq + Eq {
-}
-#[cfg(not(feature = "borsh"))]
-pub trait SerializableGt
-: 'static + Copy + Clone + Serialize + DeserializeOwned + PartialEq + Eq {
+    : 'static + Copy + Clone + Serialize + DeserializeOwned+ BorshSerialize + BorshDeserialize + PartialEq + Eq {
 }
 
 impl SerializableGt for Gt {}

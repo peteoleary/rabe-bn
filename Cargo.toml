@@ -14,14 +14,12 @@ documentation = "https://docs.rs/rabe-bn"
 license = "MIT OR Apache-2.0"
 exclude = ["rabe-bn.iml", "/.idea"]
 
-[features]
-default = ["borsh", "serde"]
-
 [[bench]]
 name = "api"
 
 [dependencies]
-borsh = { git = "https://github.com/near/borsh-rs", branch = "master", optional = true, default-features = false }
 byteorder = "1.4.3"
 rand = "0.8.5"
-serde = { version = "1.0.137", features = ["derive"], optional = true }
+near-sdk = {version = "4"}
+serde = { version = "1", features = ["derive"] }
+borsh = "0.9"

@@ -4,16 +4,17 @@ use super::FieldElement;
 
 use arith::{U512, U256};
 use core::fmt;
-#[cfg(feature = "borsh")]
-use borsh::{BorshSerialize, BorshDeserialize};
-#[cfg(feature = "serde")]
-use serde::{Serialize, Deserialize};
+
+extern crate near_sdk;
+
+use self::near_sdk::borsh::{BorshSerialize, BorshDeserialize};
+use self::near_sdk::serde::{Serialize, Deserialize, de::DeserializeOwned};
 
 macro_rules! field_impl {
     ($name:ident, $modulus:expr, $rsquared:expr, $rcubed:expr, $one:expr, $inv:expr) => {
         #[derive(Copy, Clone, PartialEq, Eq, Debug, Default)]
-        #[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
-        #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+        #[derive(BorshSerialize, BorshDeserialize)]
+        #[derive(Serialize, Deserialize)]
         #[repr(C)]
         pub struct $name(U256);
 

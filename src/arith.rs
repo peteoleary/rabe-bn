@@ -3,16 +3,17 @@ use rand::Rng;
 use core::fmt;
 use byteorder::{ByteOrder, BigEndian, WriteBytesExt};
 use std::iter::FromIterator;
-#[cfg(feature = "borsh")]
-use borsh::{BorshSerialize, BorshDeserialize};
-#[cfg(feature = "serde")]
-use serde::{Serialize, Deserialize};
+
+extern crate near_sdk;
+
+use self::near_sdk::borsh::{BorshSerialize, BorshDeserialize};
+use self::near_sdk::serde::{Serialize, Deserialize, de::DeserializeOwned};
 
 /// 256-bit, stack allocated biginteger for use in prime field
 /// arithmetic.
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Default)]
-#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(BorshSerialize, BorshDeserialize)]
+#[derive(Serialize, Deserialize)]
 #[repr(C)]
 pub struct U256(pub [u64; 4]);
 
@@ -25,8 +26,8 @@ impl From<[u64; 4]> for U256 {
 /// 512-bit, stack allocated biginteger for use in extension
 /// field serialization and scalar interpretation.
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
-#[cfg_attr(feature = "borsh", derive(BorshSerialize, BorshDeserialize))]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(BorshSerialize, BorshDeserialize)]
+#[derive(Serialize, Deserialize)]
 #[repr(C)]
 pub struct U512(pub [u64; 8]);
 
