@@ -1,5 +1,9 @@
 # bn [![Crates.io](https://img.shields.io/crates/v/rabe-bn.svg)](https://crates.io/crates/rabe-bn) [![Build status](https://api.travis-ci.org/zcash/bn.svg)](https://travis-ci.org/zcash/bn)
 
+This fork (https://github.com/peteoleary/rabe-bn) has been modified to more easily work in NEAR smart contracts which require both `serde` and `borsh` serialization. The original project used features to select either serialization method but assumed they were mutually exclusive. I tried to make it so that both flags could be set but the resulting `cfg ` macros because very confusing and hard to follow.
+
+See https://github.com/peteoleary/zksnark-rs-near for an example of how to use this project in a NEAR smart contract.
+
 This is a [pairing cryptography](https://en.wikipedia.org/wiki/Pairing-based_cryptography) library written in pure Rust. It makes use of the Barreto-Naehrig (BN) curve construction from [[BCTV2015]](https://eprint.iacr.org/2013/879.pdf) to provide two cyclic groups **G<sub>1</sub>** and **G<sub>2</sub>**, with an efficient bilinear pairing:
 
 *e: G<sub>1</sub> × G<sub>2</sub> → G<sub>T</sub>*
@@ -17,7 +21,7 @@ Add the `bn` crate to your dependencies in `Cargo.toml`...
 rabe-bn = "0.4.20"
 ```
 
-If you prefer borsh instead of `serde`, you may use the `borsh` feature.
+~~If you prefer borsh instead of `serde`, you may use the `borsh` feature.~~
 Afterwards add an `extern crate` declaration to your crate root:
 
 ```rust
